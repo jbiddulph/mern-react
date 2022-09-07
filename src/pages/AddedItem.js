@@ -17,10 +17,16 @@ import { createItem } from "../redux/features/itemSlice";
 const initialState = {
   title: "",
   description: "",
-  tags: [],
+  chips: [],
 };
 
-const AddeditItem = () => {
+const AddedItem = () => {
+  const [chips, setChips] = React.useState([]);
+
+  const handleChips = (newChips) => {
+    setChips(newChips);
+  };
+
   const [itemData, setItemData] = useState(initialState);
   const { error, loading } = useSelector((state) => ({ ...state.item }));
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -47,12 +53,12 @@ const AddeditItem = () => {
   const handleAddTag = (tag) => {
     setItemData({ ...itemData, tags: [...itemData.tags, tag] });
   };
-  const handleDeleteTag = (deleteTag) => {
-    setItemData({
-      ...itemData,
-      tags: itemData.tags.filter((tag) => tag !== deleteTag),
-    });
-  };
+  //   const handleDeleteTag = (deleteTag) => {
+  //     setItemData({
+  //       ...itemData,
+  //       tags: itemData.tags.filter((tag) => tag !== deleteTag),
+  //     });
+  //   };
   const handleClear = () => {
     setItemData({ title: "", description: "", tags: [] });
   };
@@ -101,12 +107,12 @@ const AddeditItem = () => {
             </div>
             <div className="col-md-12">
               <MuiChipsInput
-                name="tags"
+                name="chips"
                 variant="outlined"
                 placeholder="Enter tag"
                 fullWidth
-                value={tags}
-                onChange={handleAddTag}
+                value={chips}
+                onChange={handleChips}
                 // onChange={(tag) => handleAddTag(tag)}
                 // onDelete={(tag) => handleDeleteTag(tag)}
               />
@@ -138,4 +144,4 @@ const AddeditItem = () => {
   );
 };
 
-export default AddeditItem;
+export default AddedItem;
