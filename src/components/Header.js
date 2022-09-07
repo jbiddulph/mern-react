@@ -22,13 +22,13 @@ const Header = () => {
   };
   const { user } = useSelector((state) => ({ ...state.auth }));
   return (
-    <MDBNavbar fixed="top" expand="lg" style={{ backgroundColor: "#f0e6ea" }}>
+    <MDBNavbar fixed="top" expand="lg" style={{ backgroundColor: "#ffffff" }}>
       <MDBContainer>
         <MDBNavbarBrand
           href="/"
           style={{ color: "#606080", fontWeight: "600", fontSize: "22px" }}
         >
-          JBIDDULPH
+          LookWhatIFound
         </MDBNavbarBrand>
         <MDBNavbarToggler
           type="button"
