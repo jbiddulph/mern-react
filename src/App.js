@@ -9,7 +9,7 @@ import Register from "./pages/Register";
 import Header from "./components/Header";
 import { useDispatch } from "react-redux";
 import { setUser } from "./redux/features/authSlice";
-import AddedItem from "./pages/AddedItem";
+import AddEditItem from "./pages/AddEditItem";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,8 +26,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/addItem" element={<AddedItem />} />
-          <Route path="/editItem/:id" element={<AddedItem />} />
+          <Route path="/addItem" element={<AddEditItem />} />
+          <Route path="/editItem/:id" element={<AddEditItem />} />
         </Routes>
       </div>
     </BrowserRouter>

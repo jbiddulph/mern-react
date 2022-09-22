@@ -7,7 +7,7 @@ import {
   MDBBtn,
   MDBSpinner,
 } from "mdb-react-ui-kit";
-import { MuiChipsInput } from "mui-chips-input";
+import ChipInput from "material-ui-chip-input";
 import FileBase from "react-file-base64";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -17,16 +17,10 @@ import { createItem } from "../redux/features/itemSlice";
 const initialState = {
   title: "",
   description: "",
-  chips: [],
+  tags: [],
 };
 
-const AddedItem = () => {
-  const [chips, setChips] = React.useState([]);
-
-  const handleChips = (newChips) => {
-    setChips(newChips);
-  };
-
+const AddEditItem = () => {
   const [itemData, setItemData] = useState(initialState);
   const { error, loading } = useSelector((state) => ({ ...state.item }));
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -53,12 +47,12 @@ const AddedItem = () => {
   const handleAddTag = (tag) => {
     setItemData({ ...itemData, tags: [...itemData.tags, tag] });
   };
-  //   const handleDeleteTag = (deleteTag) => {
-  //     setItemData({
-  //       ...itemData,
-  //       tags: itemData.tags.filter((tag) => tag !== deleteTag),
-  //     });
-  //   };
+  const handleDeleteTag = (deleteTag) => {
+    setItemData({
+      ...itemData,
+      tags: itemData.tags.filter((tag) => tag !== deleteTag),
+    });
+  };
   const handleClear = () => {
     setItemData({ title: "", description: "", tags: [] });
   };
@@ -106,15 +100,14 @@ const AddedItem = () => {
               />
             </div>
             <div className="col-md-12">
-              <MuiChipsInput
-                name="chips"
+              <ChipInput
+                name="tags"
                 variant="outlined"
                 placeholder="Enter tag"
                 fullWidth
-                value={chips}
-                onChange={handleChips}
-                // onChange={(tag) => handleAddTag(tag)}
-                // onDelete={(tag) => handleDeleteTag(tag)}
+                value={tags}
+                onAdd={(tag) => handleAddTag(tag)}
+                onDelete={(tag) => handleDeleteTag(tag)}
               />
             </div>
             <div className="d-flex justify-content-start">
@@ -144,4 +137,4 @@ const AddedItem = () => {
   );
 };
 
-export default AddedItem;
+export default AddEditItem;
