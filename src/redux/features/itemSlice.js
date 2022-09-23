@@ -51,6 +51,33 @@ export const getItemsByUser = createAsyncThunk(
   }
 );
 
+export const deleteItem = createAsyncThunk(
+  "item/deleteItem",
+  async ({ id, toast }, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteItem(id);
+      toast.success("Item Deleted Successfully");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateItem = createAsyncThunk(
+  "item/updateItem",
+  async ({ id, updatedItemData, toast, navigate }, { rejectWithValue }) => {
+    try {
+      const response = await api.updateItem(updatedItemData, id);
+      toast.success("Item Updated Successfully");
+      navigate("/");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const itemSlice = createSlice({
   name: "item",
   initialState: {
@@ -102,6 +129,46 @@ const itemSlice = createSlice({
       state.userItems = action.payload;
     },
     [getItemsByUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [deleteItem.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [deleteItem.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log("action", action);
+      const {
+        arg: { id },
+      } = action.meta;
+      if (id) {
+        state.items = state.items.filter((item) => item._id !== id);
+        state.userItems = state.userItems.filter((item) => item._id !== id);
+      }
+    },
+    [deleteItem.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [updateItem.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [updateItem.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log("action", action);
+      const {
+        arg: { id },
+      } = action.meta;
+      if (id) {
+        state.items = state.items.map((item) =>
+          item._id === id ? action.payload : item
+        );
+        state.userItems = state.userItems.map((item) =>
+          item._id === id ? action.payload : item
+        );
+      }
+    },
+    [updateItem.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },

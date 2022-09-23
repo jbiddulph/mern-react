@@ -3,6 +3,7 @@ import { MDBCol, MDBContainer, MDBRow, MDBTypography } from "mdb-react-ui-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { getItems } from "../redux/features/itemSlice";
 import CardItem from "../components/CardItem";
+import Spinner from "../components/Spinner";
 
 const Home = () => {
   const { items, loading } = useSelector((state) => ({ ...state.item }));
@@ -11,7 +12,7 @@ const Home = () => {
     dispatch(getItems());
   }, []);
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <Spinner />;
   }
   return (
     <div

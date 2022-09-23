@@ -13,7 +13,9 @@ import {
 } from "mdb-react-ui-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getItemsByUser } from "../redux/features/itemSlice";
+import { deleteItem, getItemsByUser } from "../redux/features/itemSlice";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -31,6 +33,14 @@ const Dashboard = () => {
     }
     return str;
   };
+  if (loading) {
+    return <Spinner />;
+  }
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      dispatch(deleteItem({ id, toast }));
+    }
+  };
   return (
     <div
       style={{
@@ -43,7 +53,7 @@ const Dashboard = () => {
       <h4 className="text-center">Dashboard: {user?.result?.name}</h4>
       <hr style={{ maxWidth: "570px" }} />
       {userItems &&
-        userItems.map((item) => {
+        userItems.map((item) => (
           <MDBCardGroup>
             <MDBCard
               style={{ maxWidth: "600px" }}
@@ -67,6 +77,7 @@ const Dashboard = () => {
                     <MDBCardText className="text-start">
                       <small className="text-muted">
                         {excerpt(item.description)}
+                        ID: {item._id}
                       </small>
                     </MDBCardText>
                     <div
@@ -82,6 +93,7 @@ const Dashboard = () => {
                           icon="trash"
                           style={{ color: "#dd4b39" }}
                           size="lg"
+                          onClick={() => handleDelete(item._id)}
                         ></MDBIcon>
                       </MDBBtn>
                       <Link to={`/editItem/${item._id}`}>
@@ -97,8 +109,8 @@ const Dashboard = () => {
                 </MDBCol>
               </MDBRow>
             </MDBCard>
-          </MDBCardGroup>;
-        })}
+          </MDBCardGroup>
+        ))}
     </div>
   );
 };

@@ -12,6 +12,7 @@ import { setUser } from "./redux/features/authSlice";
 import AddEditItem from "./pages/AddEditItem";
 import SingleItem from "./pages/SingleItem";
 import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,10 +29,38 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/addItem" element={<AddEditItem />} />
-          <Route path="/editItem/:id" element={<AddEditItem />} />
-          <Route path="/item/:id" element={<SingleItem />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/addItem"
+            element={
+              <PrivateRoute>
+                <AddEditItem />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/editItem/:id"
+            element={
+              <PrivateRoute>
+                <AddEditItem />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/item/:id"
+            element={
+              <PrivateRoute>
+                <SingleItem />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

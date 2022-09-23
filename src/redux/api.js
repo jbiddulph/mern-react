@@ -17,4 +17,7 @@ export const googleSignIn = (result) => API.post("/users/googleSignIn", result);
 export const createItem = (itemData) => API.post("/item", itemData);
 export const getItems = () => API.get("/item");
 export const getItem = (id) => API.get(`/item/${id}`);
+export const deleteItem = (id) => API.delete(`/item/${id}`);
+export const updateItem = (updatedItemData, id) =>
+  API.patch(`/item/${id}`, updatedItemData);
 export const getItemsByUser = (userId) => API.get(`/item/userItems/${userId}`);
