@@ -10,6 +10,8 @@ import Header from "./components/Header";
 import { useDispatch } from "react-redux";
 import { setUser } from "./redux/features/authSlice";
 import AddEditItem from "./pages/AddEditItem";
+import SingleItem from "./pages/SingleItem";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,6 +30,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/addItem" element={<AddEditItem />} />
           <Route path="/editItem/:id" element={<AddEditItem />} />
+          <Route path="/item/:id" element={<SingleItem />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </BrowserRouter>
