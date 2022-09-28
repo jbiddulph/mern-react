@@ -12,15 +12,38 @@ import {
 } from "mdb-react-ui-kit";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout } from "../redux/features/authSlice";
+import { searchItems } from "../redux/features/itemSlice";
+import { useNavigate } from "react-router-dom";
+import decode from "jwt-decode";
 
 const Header = () => {
   const [show, setShow] = useState(false);
+  const [search, setSearch] = useState("");
+  const { user } = useSelector((state) => ({ ...state.auth }));
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const token = user?.token;
+  if (token) {
+    const decodedToken = decode(token);
+    if (decodedToken.exp * 1000 < new Date().getTime()) {
+      dispatch(setLogout());
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (search) {
+      dispatch(searchItems(search));
+      navigate(`/items/search?searchQuery=${search}`);
+      setSearch("");
+    } else {
+      navigate("/");
+    }
+  };
 
   const handleLogout = () => {
     dispatch(setLogout());
   };
-  const { user } = useSelector((state) => ({ ...state.auth }));
+
   return (
     <MDBNavbar fixed="top" expand="lg" style={{ backgroundColor: "#ffffff" }}>
       <MDBContainer>
@@ -41,7 +64,7 @@ const Header = () => {
         <MDBCollapse show={show} navbar>
           <MDBNavbarNav right fullWidth={false} className="mb-2  mb-lg-0">
             {user?.result?._id && (
-              <h5 style={{ marginRight: "30px", marginTop: "17px" }}>
+              <h5 style={{ marginRight: "30px", marginTop: "27px" }}>
                 Logged in as: {user?.result?.name}
               </h5>
             )}
@@ -80,6 +103,18 @@ const Header = () => {
               </MDBNavbarItem>
             )}
           </MDBNavbarNav>
+          <form className="d-flex in pit-group w-auto" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search Items"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div style={{ marginTop: "5px", marginLeft: "5px" }}>
+              <MDBIcon fas icon="search" />
+            </div>
+          </form>
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

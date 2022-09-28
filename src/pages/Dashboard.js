@@ -51,7 +51,6 @@ const Dashboard = () => {
       }}
     >
       <h4 className="text-center">Dashboard: {user?.result?.name}</h4>
-      <hr style={{ maxWidth: "570px" }} />
       {userItems &&
         userItems.map((item) => (
           <MDBCardGroup>
@@ -77,7 +76,6 @@ const Dashboard = () => {
                     <MDBCardText className="text-start">
                       <small className="text-muted">
                         {excerpt(item.description)}
-                        ID: {item._id}
                       </small>
                     </MDBCardText>
                     <div

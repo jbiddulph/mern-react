@@ -3,6 +3,7 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -13,6 +14,7 @@ import AddEditItem from "./pages/AddEditItem";
 import SingleItem from "./pages/SingleItem";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import TagItems from "./pages/TagItems";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +28,9 @@ function App() {
         <Header />
         <ToastContainer />
         <Routes>
+          <Route path="*" element={<NotFound />} />
+          <Route path="/items/search" element={<Home />} />
+          <Route path="/items/tag/:tag" element={<TagItems />} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

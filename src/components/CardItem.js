@@ -1,21 +1,78 @@
 import React from "react";
 import {
+  MDBIcon,
+  MDBBtn,
   MDBCard,
   MDBCardBody,
   MDBCardTitle,
   MDBCardText,
   MDBCardImage,
   MDBCardGroup,
+  MDBTooltip,
 } from "mdb-react-ui-kit";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { likeItem } from "../redux/features/itemSlice";
+import { excerpt } from "../utility/index";
 
-const CardItem = ({ imageFile, description, title, name, tags, _id }) => {
-  const excerpt = (str) => {
-    if (str.length > 45) {
-      str = str.substring(0, 45) + "...";
+const CardItem = ({
+  imageFile,
+  description,
+  title,
+  name,
+  tags,
+  likes,
+  creator,
+  socket,
+  _id,
+}) => {
+  const { user } = useSelector((state) => ({ ...state.auth }));
+  const userId = user?.result?._id;
+  const dispatch = useDispatch();
+
+  const Likes = () => {
+    if (likes.length > 0) {
+      return likes.find((like) => like === userId) ? (
+        <>
+          <MDBIcon fas icon="heart" style={{ color: "#bf0000" }} />
+          &nbsp;
+          {likes.length > 2 ? (
+            <MDBTooltip
+              tag="span"
+              title={`You and ${likes.length - 1} other people likes`}
+            >
+              {likes.length} Likes
+            </MDBTooltip>
+          ) : (
+            `${likes.length} Like${likes.length > 1 ? "s" : ""}`
+          )}
+        </>
+      ) : (
+        <>
+          <MDBIcon far icon="heart" style={{ color: "#bf0000" }} />
+          &nbsp;{likes.length} {likes.length === 1 ? "Like" : "Likes"}
+        </>
+      );
     }
-    return str;
+    return (
+      <>
+        <MDBIcon far icon="heart" style={{ color: "#bf0000" }} />
+        &nbsp;Like
+      </>
+    );
   };
+
+  const handleLike = () => {
+    dispatch(likeItem({ _id }));
+    const alreadyLiked = likes.find((like) => like === userId);
+    if (!alreadyLiked && userId !== creator) {
+      socket.emit("sendNotification", {
+        senderName: user?.result?.name,
+        receiverName: name,
+      });
+    }
+  };
+
   return (
     <MDBCardGroup>
       <MDBCard className="h-100 mt-2 d-sm-flex" style={{ maxWidth: "20rem" }}>
@@ -27,12 +84,22 @@ const CardItem = ({ imageFile, description, title, name, tags, _id }) => {
         />
         <div className="top-left">{name}</div>
         <span className="text-start tag-card">
-          {tags.map((item) => `#${item}`)}
+          {tags.map((tag) => (
+            <Link to={`/items/tag/${tag}`}>#{tag}</Link>
+          ))}
+          <MDBBtn
+            style={{ float: "right", marginRight: "10px" }}
+            tag="a"
+            color="none"
+            onClick={handleLike}
+          >
+            <Likes />
+          </MDBBtn>
         </span>
         <MDBCardBody>
           <MDBCardTitle className="text-start">{title}</MDBCardTitle>
           <MDBCardText className="text-start">
-            {excerpt(description)}
+            {excerpt(description, 45)}
             <Link to={`/item/${_id}`}>Read More</Link>
           </MDBCardText>
         </MDBCardBody>

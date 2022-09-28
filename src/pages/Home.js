@@ -1,16 +1,21 @@
 import React, { useEffect } from "react";
 import { MDBCol, MDBContainer, MDBRow, MDBTypography } from "mdb-react-ui-kit";
 import { useDispatch, useSelector } from "react-redux";
-import { getItems } from "../redux/features/itemSlice";
+import { getItems, setCurrentPage } from "../redux/features/itemSlice";
 import CardItem from "../components/CardItem";
 import Spinner from "../components/Spinner";
+import Pagination from "../components/Pagination";
 
 const Home = () => {
-  const { items, loading } = useSelector((state) => ({ ...state.item }));
+  const { items, loading, currentPage, numberOfPages } = useSelector(
+    (state) => ({
+      ...state.item,
+    })
+  );
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getItems());
-  }, []);
+    dispatch(getItems(currentPage));
+  }, [currentPage]);
   if (loading) {
     return <Spinner />;
   }
@@ -38,6 +43,12 @@ const Home = () => {
           </MDBContainer>
         </MDBCol>
       </MDBRow>
+      <Pagination
+        setCurrentPage={setCurrentPage}
+        numberOfPages={numberOfPages}
+        currentPage={currentPage}
+        dispatch={dispatch}
+      />
     </div>
   );
 };

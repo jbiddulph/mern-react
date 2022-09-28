@@ -17,9 +17,9 @@ export const createItem = createAsyncThunk(
 
 export const getItems = createAsyncThunk(
   "item/getItems",
-  async (_, { rejectWithValue }) => {
+  async (page, { rejectWithValue }) => {
     try {
-      const response = await api.getItems();
+      const response = await api.getItems(page);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -35,6 +35,18 @@ export const getItem = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const likeItem = createAsyncThunk(
+  "item/likeItem",
+  async ({ _id }, { rejectWithValue }) => {
+    try {
+      const response = await api.likeItem(_id);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -78,16 +90,62 @@ export const updateItem = createAsyncThunk(
   }
 );
 
+export const searchItems = createAsyncThunk(
+  "item/searchItems",
+  async (searchQuery, { rejectWithValue }) => {
+    try {
+      const response = await api.getItemsBySearch(searchQuery);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getItemsByTag = createAsyncThunk(
+  "item/getItemsByTag",
+  async (tag, { rejectWithValue }) => {
+    try {
+      const response = await api.getTagItems(tag);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getRelatedItems = createAsyncThunk(
+  "item/getRelatedItems",
+  async (tags, { rejectWithValue }) => {
+    try {
+      const response = await api.getRelatedItems(tags);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const itemSlice = createSlice({
   name: "item",
   initialState: {
     item: {},
     items: [],
     userItems: [],
+    tagItems: [],
+    relatedItems: [],
+    currentPage: 1,
+    numberOfPages: null,
     error: "",
     loading: false,
   },
+  reducers: {
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+  },
   extraReducers: {
+    // Create Item
     [createItem.pending]: (state, action) => {
       state.loading = true;
     },
@@ -99,17 +157,21 @@ const itemSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
+    // Items
     [getItems.pending]: (state, action) => {
       state.loading = true;
     },
     [getItems.fulfilled]: (state, action) => {
       state.loading = false;
-      state.items = action.payload;
+      state.items = action.payload.data;
+      state.numberOfPages = action.payload.numberOfPages;
+      state.currentPage = action.payload.currentPage;
     },
     [getItems.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },
+    // Single Item
     [getItem.pending]: (state, action) => {
       state.loading = true;
     },
@@ -121,6 +183,7 @@ const itemSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
+    // Items By User
     [getItemsByUser.pending]: (state, action) => {
       state.loading = true;
     },
@@ -132,6 +195,7 @@ const itemSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
+    // Delete Items
     [deleteItem.pending]: (state, action) => {
       state.loading = true;
     },
@@ -150,12 +214,12 @@ const itemSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
+    // Update Item
     [updateItem.pending]: (state, action) => {
       state.loading = true;
     },
     [updateItem.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log("action", action);
       const {
         arg: { id },
       } = action.meta;
@@ -172,7 +236,61 @@ const itemSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
+    // Like Item
+    [likeItem.pending]: (state, action) => {},
+    [likeItem.fulfilled]: (state, action) => {
+      state.loading = false;
+      const {
+        arg: { _id },
+      } = action.meta;
+      if (_id) {
+        state.items = state.items.map((item) =>
+          item._id === _id ? action.payload : item
+        );
+      }
+    },
+    [likeItem.rejected]: (state, action) => {
+      state.error = action.payload.message;
+    },
+    // Search Items
+    [searchItems.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [searchItems.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.items = action.payload;
+    },
+    [searchItems.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    // Items By Tag
+    [getItemsByTag.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [getItemsByTag.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.tagItems = action.payload;
+    },
+    [getItemsByTag.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    // Related Items
+    [getRelatedItems.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [getRelatedItems.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.relatedItems = action.payload;
+    },
+    [getRelatedItems.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
   },
 });
+
+export const { setCurrentPage } = itemSlice.actions;
 
 export default itemSlice.reducer;

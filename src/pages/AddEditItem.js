@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
+  MDBInput,
+  MDBTextArea,
   MDBCard,
   MDBCardBody,
-  MDBCardFooter,
   MDBValidation,
+  MDBValidationItem,
   MDBBtn,
-  MDBSpinner,
 } from "mdb-react-ui-kit";
 import ChipInput from "material-ui-chip-input";
 import FileBase from "react-file-base64";
@@ -22,6 +23,7 @@ const initialState = {
 
 const AddEditItem = () => {
   const [itemData, setItemData] = useState(initialState);
+  const [tagErrMsg, setTagErrMsg] = useState(null);
   const { error, loading, userItems } = useSelector((state) => ({
     ...state.item,
   }));
@@ -43,6 +45,9 @@ const AddEditItem = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!tags.length) {
+      setTagErrMsg("Please provide some tags");
+    }
     if (title && description && tags) {
       const updatedItemData = { ...itemData, name: user?.result?.name };
       if (!id) {
@@ -58,6 +63,7 @@ const AddEditItem = () => {
     setItemData({ ...itemData, [name]: value });
   };
   const handleAddTag = (tag) => {
+    setTagErrMsg(null);
     setItemData({ ...itemData, tags: [...itemData.tags, tag] });
   };
   const handleDeleteTag = (deleteTag) => {
@@ -86,31 +92,31 @@ const AddEditItem = () => {
         <MDBCardBody>
           <MDBValidation onSubmit={handleSubmit} className="row g-3" noValidate>
             <div className="col-md-12">
-              <input
-                type="text"
-                placeholder="Enter Title"
-                name="title"
-                onChange={onInputChange}
-                className="form-control"
-                value={title || ""}
-                required
-                invalid="true"
-                validation="Please provide title"
-              />
+              <MDBValidationItem feedback="Please provide title" invalid>
+                <MDBInput
+                  type="text"
+                  placeholder="Enter Title"
+                  name="title"
+                  onChange={onInputChange}
+                  className="form-control"
+                  value={title || ""}
+                  required
+                />
+              </MDBValidationItem>
             </div>
             <div className="col-md-12">
-              <input
-                type="text"
-                placeholder="Enter Description"
-                style={{ height: "100px" }}
-                name="description"
-                onChange={onInputChange}
-                className="form-control"
-                value={description}
-                required
-                invalid="true"
-                validation="Please provide description"
-              />
+              <MDBValidationItem feedback="Please provide description" invalid>
+                <MDBTextArea
+                  type="text"
+                  placeholder="Enter Description"
+                  name="description"
+                  onChange={onInputChange}
+                  className="form-control"
+                  value={description}
+                  required
+                  rows={4}
+                />
+              </MDBValidationItem>
             </div>
             <div className="col-md-12">
               <ChipInput
@@ -122,6 +128,7 @@ const AddEditItem = () => {
                 onAdd={(tag) => handleAddTag(tag)}
                 onDelete={(tag) => handleDeleteTag(tag)}
               />
+              {tagErrMsg && <div className="tagErrMsg">{tagErrMsg}</div>}
             </div>
             <div className="d-flex justify-content-start">
               <FileBase

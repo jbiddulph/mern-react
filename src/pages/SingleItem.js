@@ -10,13 +10,18 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import moment from "moment";
-import { getItem } from "../redux/features/itemSlice";
+import { getItem, getRelatedItems } from "../redux/features/itemSlice";
+import RelatedItems from "../components/RelatedItems";
 
 const SingleItem = () => {
   const dispatch = useDispatch();
-  const { item } = useSelector((state) => ({ ...state.item }));
+  const { item, relatedItems } = useSelector((state) => ({ ...state.item }));
   const { id } = useParams();
+  const tags = item?.tags;
 
+  useEffect(() => {
+    tags && dispatch(getRelatedItems(tags));
+  }, [tags]);
   useEffect(() => {
     if (id) {
       dispatch(getItem(id));
@@ -59,6 +64,7 @@ const SingleItem = () => {
               {item.description}
             </MDBCardText>
           </MDBCardBody>
+          <RelatedItems relatedItems={relatedItems} itemId={id} />
         </MDBCard>
       </MDBContainer>
     </>
