@@ -5,7 +5,7 @@ const devEnv = process.env.MODE_ENV !== "production";
 const { REACT_APP_DEV_URL, REACT_APP_PROD_URL } = process.env;
 
 const API = axios.create({
-  baseURL: `${devEnv ? REACT_APP_DEV_URL : REACT_APP_PROD_URL}`,
+  baseURL: `${devEnv ? REACT_APP_PROD_URL : REACT_APP_DEV_URL}`,
 });
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
