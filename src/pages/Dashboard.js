@@ -26,6 +26,7 @@ const Dashboard = () => {
     if (userId) {
       dispatch(getItemsByUser(userId));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
   const excerpt = (str) => {
     if (str.length > 40) {
@@ -46,11 +47,19 @@ const Dashboard = () => {
       style={{
         margin: "auto",
         padding: "120px",
-        maxWidth: "900px",
+        maxWidth: "1080px",
         alignContent: "center",
       }}
     >
-      <h4 className="text-center">Dashboard: {user?.result?.name}</h4>
+      {userItems.length === 0 && (
+        <h3>No items have been created yet for {user?.result?.name} </h3>
+      )}
+
+      {userItems.length > 0 && (
+        <>
+          <h4 className="text-center">Dashboard: {user?.result?.name}</h4>
+        </>
+      )}
       {userItems &&
         userItems.map((item) => (
           <MDBCardGroup>

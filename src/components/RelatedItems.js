@@ -21,10 +21,10 @@ const RelatedItems = ({ relatedItems, itemId }) => {
             {relatedItems
               .filter((item) => item._id !== itemId)
               .splice(0, 3)
-              .map((item) => (
+              .map((item, index) => (
                 <MDBCol>
                   <MDBCard>
-                    <Link to={`/item/${item._id}`}>
+                    <Link key={index} to={`/item/${item._id}`}>
                       <MDBCardImage
                         src={item.imageFile}
                         alt={item.title}
@@ -33,7 +33,7 @@ const RelatedItems = ({ relatedItems, itemId }) => {
                     </Link>
                     <span className="text-start tag-card">
                       {item.tags.map((tag) => (
-                        <Link to={`/items/tag/${tag}`}>#{tag}</Link>
+                        <Link to={`/items/tag/${tag}`}> #{tag}</Link>
                       ))}
                     </span>
                     <MDBCardBody>

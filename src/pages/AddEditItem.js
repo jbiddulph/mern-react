@@ -24,7 +24,7 @@ const initialState = {
 const AddEditItem = () => {
   const [itemData, setItemData] = useState(initialState);
   const [tagErrMsg, setTagErrMsg] = useState(null);
-  const { error, loading, userItems } = useSelector((state) => ({
+  const { error, userItems } = useSelector((state) => ({
     ...state.item,
   }));
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -37,6 +37,7 @@ const AddEditItem = () => {
       const singleItem = userItems.find((item) => item._id === id);
       setItemData({ ...singleItem });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {

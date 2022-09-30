@@ -84,16 +84,25 @@ const CardItem = ({
         />
         <div className="top-left">{name}</div>
         <span className="text-start tag-card">
-          {tags.map((tag) => (
-            <Link to={`/items/tag/${tag}`}>#{tag}</Link>
+          {tags.map((tag, index) => (
+            <Link key={index} to={`/items/tag/${tag}`}>
+              {" "}
+              #{tag}
+            </Link>
           ))}
           <MDBBtn
             style={{ float: "right", marginRight: "10px" }}
             tag="a"
             color="none"
-            onClick={handleLike}
+            onClick={!user?.result ? null : handleLike}
           >
-            <Likes />
+            {!user?.result ? (
+              <MDBTooltip title="Please login to like item" tag="a">
+                <Likes />
+              </MDBTooltip>
+            ) : (
+              <Likes />
+            )}
           </MDBBtn>
         </span>
         <MDBCardBody>

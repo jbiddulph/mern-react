@@ -25,6 +25,7 @@ const TagItems = () => {
     if (tag) {
       dispatch(getItemsByTag(tag));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tag]);
 
   if (Loading) {
