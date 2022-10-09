@@ -107,7 +107,7 @@ const AddEditItem = () => {
               </MDBValidationItem>
             </div>
             <div className="col-md-12">
-              <select class="mdb-select md-form colorful-select dropdown-primary" name="category" onValueChange={onInputChange}>
+              <select class="mdb-select md-form colorful-select dropdown-primary" name="category" onChange={onInputChange}>
                 <option value="">Please Select</option>
                 <option value="found">Found</option>
                 <option value="lost">Lost</option>
