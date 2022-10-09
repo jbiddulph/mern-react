@@ -18,6 +18,7 @@ import { createItem, updateItem } from "../redux/features/itemSlice";
 const initialState = {
   title: "",
   description: "",
+  category: "",
   tags: [],
 };
 
@@ -30,7 +31,7 @@ const AddEditItem = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { title, description, tags } = itemData;
+  const { title, description, category, tags } = itemData;
   const { id } = useParams();
   useEffect(() => {
     if (id) {
@@ -49,7 +50,7 @@ const AddEditItem = () => {
     if (!tags.length) {
       setTagErrMsg("Please provide some tags");
     }
-    if (title && description && tags) {
+    if (title && description && category && tags) {
       const updatedItemData = { ...itemData, name: user?.result?.name };
       if (!id) {
         dispatch(createItem({ updatedItemData, navigate, toast }));
@@ -74,7 +75,7 @@ const AddEditItem = () => {
     });
   };
   const handleClear = () => {
-    setItemData({ title: "", description: "", tags: [] });
+    setItemData({ title: "", description: "", category: "", tags: [] });
   };
 
   return (
@@ -104,6 +105,13 @@ const AddEditItem = () => {
                   required
                 />
               </MDBValidationItem>
+            </div>
+            <div className="col-md-12">
+              <select class="mdb-select md-form colorful-select dropdown-primary" name="category" onValueChange={onInputChange}>
+                <option value="">Please Select</option>
+                <option value="found">Found</option>
+                <option value="lost">Lost</option>
+              </select>
             </div>
             <div className="col-md-12">
               <MDBValidationItem feedback="Please provide description" invalid>

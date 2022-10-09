@@ -76,13 +76,20 @@ const CardItem = ({
   return (
     <MDBCardGroup>
       <MDBCard className="h-100 mt-2 d-sm-flex" style={{ maxWidth: "20rem" }}>
-        <MDBCardImage
-          src={imageFile}
-          alt={title}
-          position="top"
-          style={{ maxWidth: "100%", height: "180px" }}
-        />
-        <div className="top-left">{name}</div>
+        <Link to={`/item/${_id}`}>
+          <MDBCardImage
+            src={imageFile}
+            alt={title}
+            position="top"
+            style={{ maxWidth: "100%", height: "180px" }}
+          />
+        </Link>
+        <div
+          className="top-left px-2 rounded"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
+        >
+          {name}
+        </div>
         <span className="text-start tag-card">
           {tags.map((tag, index) => (
             <Link key={index} to={`/items/tag/${tag}`}>
@@ -109,7 +116,9 @@ const CardItem = ({
           <MDBCardTitle className="text-start">{title}</MDBCardTitle>
           <MDBCardText className="text-start">
             {excerpt(description, 45)}
-            <Link to={`/item/${_id}`}>Read More</Link>
+            <Link to={`/item/${_id}`} className="mx-2">
+              Read More
+            </Link>
           </MDBCardText>
         </MDBCardBody>
       </MDBCard>
